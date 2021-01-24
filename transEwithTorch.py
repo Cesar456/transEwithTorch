@@ -56,8 +56,7 @@ class TransE(nn.Module):
         relations = triplets[:, 1]
         tails = triplets[:, 2]
         # L1还是L2距离
-        return (self.entities_emb(heads) + self.relations_emb(relations) - self.entities_emb(tails)).norm(p=self.norm,
-                                                                                                          dim=1)
+        return (self.entities_emb(heads) + self.relations_emb(relations) - self.entities_emb(tails)).norm(p=self.norm, dim=1)
 
 
 class TripleDataset(data.Dataset):
@@ -114,6 +113,7 @@ if __name__ == '__main__':
 
             optimizer.zero_grad()
             pd, nd = model(positive_triples, negative_triples)
+            # pd要尽可能小， nd要尽可能大
             loss = criterion(pd, nd, torch.tensor([-1], dtype=torch.long)).mean()
             loss.backward()
             all_loss += loss.data
